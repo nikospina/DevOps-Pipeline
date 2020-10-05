@@ -1,0 +1,73 @@
+trigger:
+- develop
+- release/*
+
+variables:
+  buildConfiguration: 'Release'
+  
+stages:
+- stage: 'Build'
+  displayName: 'Build the web application'
+  jobs: 
+  - job: 'Build'
+    displayName: 'Build job'
+    pool:
+      vmImage: 'ubuntu-16.04'
+      demands:
+       - npm
+
+    variables:
+      wwwrootDir: 'wwwroot'
+      
+    steps:
+    - script: 'echo "build"'
+        
+  - job: 'RunUnitTest'
+    displayName: 'Unit Test & Coverage Job'
+    
+    steps:
+    - script 'echo "unit test"'
+
+- stage: 'Deploy'
+  displayName: 'Deploy application'
+  jobs: 
+  - job: 'DeployDev'
+    displayName: 'Deploy Dev Env Job'
+    environment: 'Desarrollo'
+    condition: |
+      and(
+      succeeded(),
+      ne(variables['Build.Reason'], 'PullRequest'),
+      eq(variables['Build.SourceBranchName'], 'develop')
+      )
+    steps:
+    - script: 'echo "Deploy in Develop environment"'
+      displayName: 'Updating Develop Deployment Version'
+
+  - job: 'DeployQa'
+    displayName: 'Deploy Qa Env Job'
+    environment: 'Calidad'
+    condition: |
+      and(
+      succeeded(),
+      ne(variables['Build.Reason'], 'PullRequest'),
+      startsWith(variables['Build.SourceBranchName'], 'release')
+      )
+    steps:
+    - script: 'echo "Deploy in Qa environment"'
+      displayName: 'Updating Qa Deployment Version'
+    - script: 'echo "exec functional testig and Quality Gates its Ok"'
+      displayName: 'Functional tests and verify Quality Gates'
+
+  - job: 'DeployPrd'
+    displayName: 'Deploy Prd Env Job'
+    environment: 'Produccion'
+    condition: |
+      and(
+      succeeded(),
+      ne(variables['Build.Reason'], 'PullRequest'),
+      startsWith(variables['Build.SourceBranchName'], 'release')
+      )
+    steps:
+    - script: 'echo "Deploy in Prd environment"'
+      displayName: 'Updating Prd Deployment Version'  
