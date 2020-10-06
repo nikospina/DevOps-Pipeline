@@ -94,3 +94,18 @@ stages:
         deploy:
           steps:
           - script: echo Deploy in Prd environment
+
+- stage: 'UpdateMaster'
+  displayName: 'Update master'
+  jobs:
+  - job: 'MergeRelease'
+    displayName: 'Merge release in master'    
+    steps:
+    - script: |
+        git checkout master
+        git merge variables['Build.SourceBranch']
+  - job: 'GitTag'
+    displayName: 'Tag master'    
+    steps:
+    - script: |
+        git tag variables['Build.SourceBranchName'] -m 'Tag by Azure Pipeline'
