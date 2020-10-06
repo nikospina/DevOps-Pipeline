@@ -28,8 +28,8 @@ stages:
     steps:
     - script: echo unit test
 
-- stage: 'Deploy'
-  displayName: 'Deploy application'
+- stage: 'Deploy Dev'
+  displayName: 'Deploy application in dev env'
   jobs: 
   - deployment: 'DeployDev'
     displayName: 'Deploy Dev'
@@ -46,6 +46,9 @@ stages:
           steps:
           - script: echo Deploy in Develop environment
 
+- stage: 'Deploy Release'
+  displayName: 'Deploy application in qa env'
+  jobs: 
   - deployment: 'DeployQa'
     displayName: 'Deploy Qa Env'
     environment: 'Calidad'
@@ -60,6 +63,13 @@ stages:
         deploy:
           steps:
           - script: echo Deploy in Qa environment
+
+  - job: 'RunFunctionalTest'
+    displayName: 'Functional test & verify Quality Gates'
+    
+    steps:
+    - script: echo functional test
+    - script: echo Verify Quality Gates
 
   - deployment: 'DeployPrd'
     displayName: 'Deploy Prd Env Job'
