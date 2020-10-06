@@ -23,8 +23,7 @@ stages:
     - script: echo build
         
   - job: 'RunUnitTest'
-    displayName: 'Unit Test & Coverage Job'
-    
+    displayName: 'Unit Test & Coverage Job'    
     steps:
     - script: echo unit test
 
