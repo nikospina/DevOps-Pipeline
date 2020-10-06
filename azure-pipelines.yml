@@ -27,7 +27,7 @@ stages:
     - script: echo unit test
 
 - stage: 'DeployDev'
-  displayName: 'Deploy application in dev env'
+  displayName: 'Deploy Dev'
   jobs: 
   - deployment: 'DeployDev'
     displayName: 'Deploy Dev'
