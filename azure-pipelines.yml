@@ -47,7 +47,7 @@ stages:
           - script: echo Deploy in Develop environment
 
 - stage: 'DeployQa'
-  displayName: 'Deploy Release'
+  displayName: 'Deploy Qa'
   jobs: 
   - deployment: 'DeployQa'
     displayName: 'Deploy Qa Env'
