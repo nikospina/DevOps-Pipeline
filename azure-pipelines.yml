@@ -20,13 +20,13 @@ stages:
       wwwrootDir: 'wwwroot'
       
     steps:
-    - script: 'echo "build"'
+    - script: echo build
         
   - job: 'RunUnitTest'
     displayName: 'Unit Test & Coverage Job'
     
     steps:
-    - script 'echo "unit test"'
+    - script echo unit test
 
 - stage: 'Deploy'
   displayName: 'Deploy application'
@@ -41,7 +41,7 @@ stages:
       eq(variables['Build.SourceBranchName'], 'develop')
       )
     steps:
-    - script: 'echo "Deploy in Develop environment"'
+    - script: echo Deploy in Develop environment
       displayName: 'Updating Develop Deployment Version'
 
   - job: 'DeployQa'
@@ -54,9 +54,9 @@ stages:
       startsWith(variables['Build.SourceBranchName'], 'release')
       )
     steps:
-    - script: 'echo "Deploy in Qa environment"'
+    - script: echo Deploy in Qa environment
       displayName: 'Updating Qa Deployment Version'
-    - script: 'echo "exec functional testig and Quality Gates its Ok"'
+    - script: echo exec functional testig and Quality Gates its Ok
       displayName: 'Functional tests and verify Quality Gates'
 
   - job: 'DeployPrd'
@@ -69,5 +69,5 @@ stages:
       startsWith(variables['Build.SourceBranchName'], 'release')
       )
     steps:
-    - script: 'echo "Deploy in Prd environment"'
+    - script: echo Deploy in Prd environment
       displayName: 'Updating Prd Deployment Version'  
