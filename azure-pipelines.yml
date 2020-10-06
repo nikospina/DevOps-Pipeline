@@ -108,4 +108,4 @@ stages:
         git merge --squash origin/release/$(Build.SourceBranchName)
         git commit -m 'Squash Merge release $(Build.SourceBranchName)'
         git tag $(Build.SourceBranchName) -m 'Tag by Azure Pipeline'
-        git push origin/master
+        git push origin/main
