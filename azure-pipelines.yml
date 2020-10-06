@@ -28,7 +28,7 @@ stages:
     steps:
     - script: echo unit test
 
-- stage: 'Deploy Dev'
+- stage: 'DeployDev'
   displayName: 'Deploy application in dev env'
   jobs: 
   - deployment: 'DeployDev'
@@ -46,7 +46,7 @@ stages:
           steps:
           - script: echo Deploy in Develop environment
 
-- stage: 'Deploy Release'
+- stage: 'DeployRelease'
   displayName: 'Deploy application in qa env'
   jobs: 
   - deployment: 'DeployQa'
