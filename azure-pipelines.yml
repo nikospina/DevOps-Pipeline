@@ -65,6 +65,12 @@ stages:
 
 - stage: 'FunctionalTest'
   displayName: 'Functional Testing'
+  condition: |
+      and(
+      succeeded(),
+      ne(variables['Build.Reason'], 'PullRequest'),
+      startsWith(variables['Build.SourceBranchName'], 'release')
+      )
   jobs:
   - job: 'RunFunctionalTest'
     displayName: 'Functional test & verify Quality Gates'    
