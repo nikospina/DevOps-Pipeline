@@ -26,7 +26,7 @@ stages:
     displayName: 'Unit Test & Coverage Job'
     
     steps:
-    - script echo unit test
+    - script: echo unit test
 
 - stage: 'Deploy'
   displayName: 'Deploy application'
