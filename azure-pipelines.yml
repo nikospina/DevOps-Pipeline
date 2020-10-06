@@ -31,8 +31,8 @@ stages:
 - stage: 'Deploy'
   displayName: 'Deploy application'
   jobs: 
-  - job: 'DeployDev'
-    displayName: 'Deploy Dev Env Job'
+  - deployment: 'DeployDev'
+    displayName: 'Deploy Dev'
     environment: 'Desarrollo'
     condition: |
       and(
@@ -40,12 +40,14 @@ stages:
       ne(variables['Build.Reason'], 'PullRequest'),
       eq(variables['Build.SourceBranchName'], 'develop')
       )
-    steps:
-    - script: echo Deploy in Develop environment
-      displayName: 'Updating Develop Deployment Version'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - script: echo Deploy in Develop environment
 
-  - job: 'DeployQa'
-    displayName: 'Deploy Qa Env Job'
+  - deployment: 'DeployQa'
+    displayName: 'Deploy Qa Env'
     environment: 'Calidad'
     condition: |
       and(
@@ -53,13 +55,13 @@ stages:
       ne(variables['Build.Reason'], 'PullRequest'),
       startsWith(variables['Build.SourceBranchName'], 'release')
       )
-    steps:
-    - script: echo Deploy in Qa environment
-      displayName: 'Updating Qa Deployment Version'
-    - script: echo exec functional testig and Quality Gates its Ok
-      displayName: 'Functional tests and verify Quality Gates'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - script: echo Deploy in Qa environment
 
-  - job: 'DeployPrd'
+  - deployment: 'DeployPrd'
     displayName: 'Deploy Prd Env Job'
     environment: 'Produccion'
     condition: |
@@ -68,6 +70,8 @@ stages:
       ne(variables['Build.Reason'], 'PullRequest'),
       startsWith(variables['Build.SourceBranchName'], 'release')
       )
-    steps:
-    - script: echo Deploy in Prd environment
-      displayName: 'Updating Prd Deployment Version'  
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - script: echo Deploy in Prd environment
