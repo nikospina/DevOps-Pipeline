@@ -54,7 +54,7 @@ stages:
       and(
       succeeded(),
       ne(variables['Build.Reason'], 'PullRequest'),
-      startsWith(variables['Build.SourceBranchName'], 'release')
+      startsWith(variables['Build.SourceBranch'], 'refs/heads/release')
       )
     strategy:
       runOnce:
@@ -68,7 +68,7 @@ stages:
       and(
       succeeded(),
       ne(variables['Build.Reason'], 'PullRequest'),
-      startsWith(variables['Build.SourceBranchName'], 'release')
+      startsWith(variables['Build.SourceBranch'], 'refs/heads/release')
       )
   jobs:
   - job: 'RunFunctionalTest'
@@ -87,7 +87,7 @@ stages:
       and(
       succeeded(),
       ne(variables['Build.Reason'], 'PullRequest'),
-      startsWith(variables['Build.SourceBranchName'], 'release')
+      startsWith(variables['Build.SourceBranch'], 'refs/heads/release')
       )
     strategy:
       runOnce:
