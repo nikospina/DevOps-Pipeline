@@ -73,7 +73,7 @@ stages:
     - script: echo functional test
     - script: echo Verify Quality Gates
 
- stage: 'DeployPrd'
+- stage: 'DeployPrd'
   displayName: 'Deploy Prd'
   jobs:
   - deployment: 'DeployPrd'
