@@ -103,9 +103,9 @@ stages:
     steps:
     - script: |
         git checkout master
-        git merge variables['Build.SourceBranch']
+        git merge ${{ variables.Build.SourceBranch }}
   - job: 'GitTag'
     displayName: 'Tag master'    
     steps:
     - script: |
-        git tag variables['Build.SourceBranchName'] -m 'Tag by Azure Pipeline'
+        git tag ${{ variables.Build.SourceBranchName }} -m 'Tag by Azure Pipeline'
