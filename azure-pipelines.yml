@@ -99,14 +99,17 @@ stages:
   displayName: 'Update master'
   jobs:
   - job: 'MergeRelease'
-    displayName: 'Merge release in master'    
+    displayName: 'Merge release and tag in master'    
     steps:
-    - script: |
-        git config --global user.email "azure@pipelines.com"
-        git config --global user.name "Azure Pipelines"
-        git pull origin
-        git checkout main
-        git merge --squash release/$(Build.SourceBranchName)
-        git commit -m 'Squash Merge release $(Build.SourceBranchName)'
-        git tag $(Build.SourceBranchName) -m 'Tag by Azure Pipeline'
-        git push
+    - checkout: self
+    - task: CmdLine@2
+      displayName: 'Merge to master'
+      inputs:
+        script: |
+          git checkout main
+          git merge --squash release/$(Build.SourceBranchName)
+          git commit -m 'Squash Merge release $(Build.SourceBranchName)'
+          git tag $(Build.SourceBranchName) -m 'Tag by Azure Pipeline'
+          git push
+          git push --tag
+          git status
