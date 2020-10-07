@@ -124,9 +124,6 @@ stages:
     - task: CmdLine@2
       displayName: 'Merge to master'
       inputs:
-    - task: CmdLine@2
-      displayName: 'Merge to develop'
-      inputs:
         script: |
           git config --global user.email "nikospina9611@gmail.com"
           git config --global user.name "nikospina"
