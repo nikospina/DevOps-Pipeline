@@ -7,7 +7,7 @@ variables:
   
 stages:
 - stage: 'Build'
-  displayName: 'Build the web application'
+  displayName: 'Continuous Itegration'
   jobs: 
   - job: 'Build'
     displayName: 'Build job'
@@ -15,7 +15,6 @@ stages:
       vmImage: 'ubuntu-16.04'
       demands:
        - npm
-
     variables:
       wwwrootDir: 'wwwroot'
       
@@ -26,9 +25,19 @@ stages:
     displayName: 'Unit Test & Coverage Job'    
     steps:
     - script: echo unit test
+    - task: NodeTool@0 
+      inputs:
+        versionSpec: 12.x
+    - script: npm install
+    - script: npm test
+    - task: PublishTestResults@2
+      condition: succeededOrFailed()
+      inputs:
+        testRunner: JUnit
+        testResultsFiles: '**/test-results.xml'
 
 - stage: 'DeployDev'
-  displayName: 'Deploy application in dev env'
+  displayName: 'Deploy Dev'
   jobs: 
   - deployment: 'DeployDev'
     displayName: 'Deploy Dev'
@@ -55,7 +64,7 @@ stages:
       and(
       succeeded(),
       ne(variables['Build.Reason'], 'PullRequest'),
-      startsWith(variables['Build.SourceBranchName'], 'release')
+      startsWith(variables['Build.SourceBranch'], 'refs/heads/release')
       )
     strategy:
       runOnce:
@@ -69,7 +78,7 @@ stages:
       and(
       succeeded(),
       ne(variables['Build.Reason'], 'PullRequest'),
-      startsWith(variables['Build.SourceBranchName'], 'release')
+      startsWith(variables['Build.SourceBranch'], 'refs/heads/release')
       )
   jobs:
   - job: 'RunFunctionalTest'
@@ -88,10 +97,43 @@ stages:
       and(
       succeeded(),
       ne(variables['Build.Reason'], 'PullRequest'),
-      startsWith(variables['Build.SourceBranchName'], 'release')
+      startsWith(variables['Build.SourceBranch'], 'refs/heads/release')
       )
     strategy:
       runOnce:
         deploy:
           steps:
           - script: echo Deploy in Prd environment
+
+- stage: 'UpdateRepo'
+  displayName: 'Update Repo'
+  jobs:
+  - job: 'MergeRelease'
+    displayName: 'Merge release and tag in master'    
+    steps:
+    - checkout: self
+      persistCredentials: true
+    - task: CmdLine@2
+      displayName: 'Merge to master'
+      inputs:
+        script: |
+          git config --global user.email "nikospina9611@gmail.com"
+          git config --global user.name "nikospina"
+          git fetch
+          git checkout main
+          git merge --squash origin/release/$(Build.SourceBranchName)
+          git commit -m 'Squash Merge release $(Build.SourceBranchName)'
+          git push https://$(gitUser):$(gitPass)@github.com/nikospina/DevOps-Pipeline.git
+          git tag $(Build.SourceBranchName) -m 'Tag by Azure Pipeline' 
+          git push https://$(gitUser):$(gitPass)@github.com/nikospina/DevOps-Pipeline.git --tags
+    - task: CmdLine@2
+      displayName: 'Merge to develop'
+      inputs:
+        script: |
+          git config --global user.email "nikospina9611@gmail.com"
+          git config --global user.name "nikospina"
+          git fetch
+          git checkout develop
+          git merge --squash origin/release/$(Build.SourceBranchName)
+          git commit -m 'Squash Merge release $(Build.SourceBranchName)'
+          git push https://$(gitUser):$(gitPass)@github.com/nikospina/DevOps-Pipeline.git
