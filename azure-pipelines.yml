@@ -108,8 +108,14 @@ stages:
 - stage: 'UpdateRepo'
   displayName: 'Update Repo'
   jobs:
-  - job: 'MergeRelease'
-    displayName: 'Merge release and tag in master'    
+  - job: 'MergeReleaseInMaster'
+    displayName: 'Merge release in master'
+    condition: |
+      and(
+      succeeded(),
+      ne(variables['Build.Reason'], 'PullRequest'),
+      startsWith(variables['Build.SourceBranch'], 'refs/heads/release')
+      )
     steps:
     - checkout: self
       persistCredentials: true
@@ -126,6 +132,18 @@ stages:
           git push https://$(gitUser):$(gitPass)@github.com/nikospina/DevOps-Pipeline.git
           git tag $(Build.SourceBranchName) -m 'Tag by Azure Pipeline' 
           git push https://$(gitUser):$(gitPass)@github.com/nikospina/DevOps-Pipeline.git --tags
+          
+  - job: 'MergeReleaseInDevelop'
+    displayName: 'Merge release in develop'
+    condition: |
+      and(
+      succeeded(),
+      ne(variables['Build.Reason'], 'PullRequest'),
+      startsWith(variables['Build.SourceBranch'], 'refs/heads/release')
+      )    
+    steps:
+    - checkout: self
+      persistCredentials: true
     - task: CmdLine@2
       displayName: 'Merge to develop'
       inputs:
