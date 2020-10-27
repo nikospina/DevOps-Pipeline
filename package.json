@@ -1,9 +1,10 @@
 {
   "scripts": {
-    "test": "mocha test --reporter mocha-junit-reporter"
+    "test": "mocha"
   },
   "devDependencies": {
     "mocha": "^8.2.0",
-    "mocha-junit-reporter": "^2.0.0"
+    "mocha-junit-reporter": "^2.0.0",
+    "sinon": "^9.2.0"
   }
 }
