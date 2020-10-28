@@ -35,6 +35,23 @@ stages:
       inputs:
         testRunner: JUnit
         testResultsFiles: '**/test-results.xml'
+  
+  - job: 'SonarQubeScanner'
+    displayName: 'SonarQube Scanner'
+    steps:
+      - script: echo SonarQube Scanner
+      - task: SonarQubePrepare@4
+        inputs:
+          SonarQube: 'SonarQube'
+          scannerMode: 'CLI'
+          configMode: 'manual'
+          cliProjectKey: 'Test-DevOps'
+          cliProjectName: 'Test-DevOps'
+          cliSources: '.'
+      - task: SonarQubeAnalyze@4
+      - task: SonarQubePublish@4
+        inputs:
+          pollingTimeoutSec: '300'
 
 - stage: 'DeployDev'
   displayName: 'Deploy Dev'
