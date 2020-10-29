@@ -44,15 +44,7 @@ stages:
         inputs:
           SonarQube: 'SonarQube'
           scannerMode: 'CLI'
-          configMode: 'manual'
-          cliProjectKey: 'Test-DevOps'
-          cliProjectName: 'Test-DevOps'
-          cliSources: '.'
-          extraProperties: |
-            # Additional properties that will be passed to the scanner, 
-            # Put one key=value per line, example:
-            # sonar.exclusions=**/*.bin
-            sonar.branch.name=main
+          configMode: 'file'
       - task: SonarQubeAnalyze@4
       - task: SonarQubePublish@4
         inputs:
