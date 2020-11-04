@@ -45,7 +45,7 @@ stages:
           unzip sonarInstall.zip
         displayName: Install Sonar Scanner
       - script: |
-          ./sonar-scanner-4.5.0.2216/bin/sonar-scanner -Dsonar.projectKey=Test-DevOps -Dsonar.sources=. -Dsonar.host.url=http://54.92.154.189:9000 -Dsonar.login=db2c19be53af58f692f2ae2827fbbadab8e1a058 -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info
+          ./sonar-scanner-4.5.0.2216/bin/sonar-scanner -Dsonar.projectKey=Test-DevOps -Dsonar.sources=. -Dsonar.host.url=http://54.92.154.189:9000 -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info -Dsonar.login=db2c19be53af58f692f2ae2827fbbadab8e1a058
         displayName: Sonar Scanner Run
         
 - stage: 'DeployDev'
