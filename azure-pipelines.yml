@@ -45,8 +45,8 @@ stages:
           unzip sonarInstall.zip
         displayName: Install Sonar Scanner
       - task: NodeTool@0 
-      inputs:
-        versionSpec: 12.x
+        inputs:
+         versionSpec: 12.x
       - script: npm install
       - script: npm test
       - script: |
