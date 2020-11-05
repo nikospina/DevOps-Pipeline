@@ -36,9 +36,10 @@ stages:
         testRunner: JUnit
         testResultsFiles: '**/test-results.xml'
     - task: PublishCodeCoverageResults@1
-      inputs:
-        codeCoverageTool: 'JaCoCo'
-        summaryFileLocation: '$(System.DefaultWorkingDirectory)/coverage/index.html'
+      inputs: 
+        codeCoverageTool: JaCoCo
+        summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/*index.html'
+        reportDirectory: '$(System.DefaultWorkingDirectory)/**/coverage'
   
   - job: 'SonarQubeScanner'
     displayName: 'SonarQube Scanner'
