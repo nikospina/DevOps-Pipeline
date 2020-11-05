@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "test": "nyc --reporter=lcov --reporter=text-summary mocha test --reporter mocha-junit-reporter",
+    "test": "nyc --reporter=lcov --reporter=cobertura --reporter=text-summary mocha test --reporter mocha-junit-reporter",
     "lint": "eslint ./",
     "lint:fix": "eslint ./ --fix"
   },

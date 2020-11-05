@@ -37,8 +37,8 @@ stages:
         testResultsFiles: '**/test-results.xml'
     - task: PublishCodeCoverageResults@1
       inputs: 
-        codeCoverageTool: JaCoCo
-        summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/*index.html'
+        codeCoverageTool: cobertura
+        summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/*coverage.xml'
         reportDirectory: '$(System.DefaultWorkingDirectory)/**/coverage'
   
   - job: 'SonarQubeScanner'
