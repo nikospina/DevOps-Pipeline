@@ -33,7 +33,7 @@ pipeline {
                 script{                    
                     try {
                         echo '>>> Test'
-                        //withDockerContainer("node") { sh "npm set strict-ssl false && npm install && npm test" }//chmod 777 node_modules && npx nyc@latest --reporter=lcov --reporter=cobertura --reporter=text-summary mocha test --reporter mocha-junit-reporter"}
+                        withDockerContainer("node") { sh "npm set strict-ssl false && npm install && npm test" }//chmod 777 node_modules && npx nyc@latest --reporter=lcov --reporter=cobertura --reporter=text-summary mocha test --reporter mocha-junit-reporter"}
                         sh 'ls -la'
                         echo '>>> Publish Results'
                         //cobertura autoUpdateHealth: false, autoUpdateStability: false, coberturaReportFile: 'coverage/*coverage.xml', conditionalCoverageTargets: '70, 0, 0', failUnhealthy: false, failUnstable: false, lineCoverageTargets: '80, 0, 0', maxNumberOfBuilds: 0, methodCoverageTargets: '80, 0, 0', onlyStable: false, sourceEncoding: 'ASCII'
