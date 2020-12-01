@@ -7,7 +7,7 @@ pipeline {
                 script{
                     try{
                         echo 'checkout repo'
-                        git branch: 'develop', url: 'https://github.com/nikospina/DevOps-Pipeline'
+                        //git branch: 'develop', url: 'https://github.com/nikospina/DevOps-Pipeline'
                     }
                     catch (e) {
                         echo 'Something failed, I should sound the klaxons!'
