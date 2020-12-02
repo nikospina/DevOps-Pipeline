@@ -49,11 +49,10 @@ pipeline {
                         junit skipPublishingChecks: false, testResults: 'test-results.xml'
 						
 						step([$class: 'TeamCollectResultsPostBuildAction', 
-							requestedResults: [[includes: 'test-results.xml', teamResultType: 'JUNIT']]
-						])
-						
-						step([$class: 'TeamCollectResultsPostBuildAction', 
-							requestedResults: [[includes: 'coverage/*coverage.xml', teamResultType: 'COBERTURA']]
+							requestedResults: [
+								[includes: 'test-results.xml', teamResultType: 'JUNIT'],
+								[includes: 'coverage/*coverage.xml', teamResultType: 'COBERTURA']
+							]
 						])
                     }
                     catch (e) {
