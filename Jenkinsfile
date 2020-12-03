@@ -84,7 +84,9 @@ pipeline {
                     try {
                         echo '>>> Scan image'
                         //withDockerContainer("darkaru/trivy:v1") { sh "trivy darkaru/npm-test-example:v1" }
+						echo '>>> Scan for critical vulnerabilities'
 						sh "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $HOME/Library/Caches:/root/.cache/ aquasec/trivy --exit-code 0 --severity CRITICAL darkaru/npm-test-example:v1"
+						echo '>>> Scan for medium and high vulnerabilities'
 						sh "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $HOME/Library/Caches:/root/.cache/ aquasec/trivy --exit-code 0 --severity MEDIUM,HIGH darkaru/npm-test-example:v1"
                     }
                     catch (e) {
