@@ -1,6 +1,10 @@
 def BRANCH = ""
 pipeline {
-    agent none
+    agent {
+			node{
+					label 'slaves'
+				}
+            }
     stages{
         stage('Checkout') {
 			agent any
@@ -18,14 +22,11 @@ pipeline {
             }
         }
         stage('Build') {
-            agent {
-                docker { image 'maven:3-alpine' }
-            }
             steps{
                 script{
                     try {
                         echo '>>> Build'
-						sh "mvn -v"
+						//sh "mvn -v"
                     }
                     catch (e) {
                         echo 
@@ -34,16 +35,13 @@ pipeline {
             }
         }
         stage('Test') {
-			agent {
-                docker { image 'node' }
-            }
             steps{
                 script{                    
                     try {
                         echo '>>> Test'
-                        //withDockerContainer("node") { sh "npm set strict-ssl false && npm install && npm test" }//chmod 777 node_modules && npx nyc@latest --reporter=lcov --reporter=cobertura --reporter=text-summary mocha test --reporter mocha-junit-reporter"}
+                        withDockerContainer("node") { sh "npm set strict-ssl false && npm install && npm test" }//chmod 777 node_modules && npx nyc@latest --reporter=lcov --reporter=cobertura --reporter=text-summary mocha test --reporter mocha-junit-reporter"}
                         //sh 'ls -la'
-						sh "npm set strict-ssl false && npm install && npm test"
+						//sh "npm set strict-ssl false && npm install && npm test"
                         echo '>>> Publish Results'
                         cobertura autoUpdateHealth: false, autoUpdateStability: false, coberturaReportFile: 'coverage/*coverage.xml', conditionalCoverageTargets: '70, 0, 0', failUnhealthy: false, failUnstable: false, lineCoverageTargets: '80, 0, 0', maxNumberOfBuilds: 0, methodCoverageTargets: '80, 0, 0', onlyStable: false, sourceEncoding: 'ASCII'
                         junit skipPublishingChecks: false, testResults: 'test-results.xml'
@@ -63,11 +61,6 @@ pipeline {
             }
         }
         stage('docker build') {
-			agent {
-				node{
-					label 'slaves'
-				}
-            }
             steps{
                 script{
                     try {
@@ -83,14 +76,11 @@ pipeline {
             }
         }
         stage('Trivy scan') {
-			agent {
-                docker { image 'aquasec/trivy' }
-            }
             steps{
                 script{
                     try {
                         echo '>>> Scan image'
-                        sh "trivy darkaru/npm-test-example:v1"
+                        //sh "trivy darkaru/npm-test-example:v1"
                     }
                     catch (e) {
                         echo 'Something failed, I should sound the klaxons!'
@@ -100,7 +90,6 @@ pipeline {
             }
         }
         stage('Update Data Base') {
-			agent any
             steps{
                 script{
                     try {
@@ -116,7 +105,6 @@ pipeline {
             }
         }
         stage('Deploy Dev') {
-			agent any
             when {
                 not {
                     anyOf {
@@ -138,7 +126,6 @@ pipeline {
             }
         }
         stage('Deploy QA') {
-			agent any
             when {
                 branch 'QA';
             }
@@ -155,7 +142,6 @@ pipeline {
             }
         }
         stage('Deploy PRD') {
-			agent any
             when {
                 branch 'PRD';
             }
@@ -172,7 +158,6 @@ pipeline {
             }
         }
         stage('QA Test') {
-			agent any
             when {
                 branch 'QA'
             }
