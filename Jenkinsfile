@@ -6,7 +6,7 @@ pipeline {
 				}
             }
 	environment {
-		'XDG_CACHE_HOME'=/tmp/.cache
+		XDG_CACHE_HOME = '/tmp/.cache'
 	}
     stages{
         stage('Checkout') {
