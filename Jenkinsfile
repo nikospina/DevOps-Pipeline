@@ -80,7 +80,7 @@ pipeline {
                 script{
                     try {
                         echo '>>> Scan image'
-                        //sh "trivy darkaru/npm-test-example:v1"
+                        withDockerContainer("darkaru/trivy:v1") { sh "trivy darkaru/npm-test-example:v1" }
                     }
                     catch (e) {
                         echo 'Something failed, I should sound the klaxons!'
