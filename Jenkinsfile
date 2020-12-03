@@ -63,13 +63,15 @@ pipeline {
             }
         }
         stage('docker build') {
-			agent any
+			agent {
+                docker { image 'docker' }
+            }
             steps{
                 script{
                     try {
                         echo '>>> Build image'
                         //withDockerContainer("docker") { }
-                        //sh "docker build -t darkaru/npm-test-example:v1 ."
+                        sh "docker build -t darkaru/npm-test-example:v1 ."
                     }
                     catch (e) {
                         echo 'Something failed, I should sound the klaxons!'
@@ -79,12 +81,14 @@ pipeline {
             }
         }
         stage('Trivy scan') {
-			agent any
+			agent {
+                docker { image 'aquasec/trivy' }
+            }
             steps{
                 script{
                     try {
                         echo '>>> Scan image'
-                        //withDockerContainer("aquasec/trivy") { sh "trivy darkaru/npm-test-example:v1"}
+                        sh "trivy darkaru/npm-test-example:v1"
                     }
                     catch (e) {
                         echo 'Something failed, I should sound the klaxons!'
