@@ -5,6 +5,9 @@ pipeline {
 					label 'slaves'
 				}
             }
+	environment {
+		XDG_CACHE_HOME=/tmp/.cache
+	}
     stages{
         stage('Checkout') {
 			agent any
