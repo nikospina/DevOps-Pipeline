@@ -63,7 +63,11 @@ pipeline {
             }
         }
         stage('docker build') {
-			agent any
+			agent {
+				node{
+					label 'slaves'
+				}
+            }
             steps{
                 script{
                     try {
