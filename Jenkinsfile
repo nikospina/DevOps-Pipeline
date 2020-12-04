@@ -105,9 +105,9 @@ pipeline {
 					try {
 						echo '${short_commit_id} --- commit'
 						echo '>>> Docker login'
-						sh 'aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 225742832627.dkr.ecr.us-east-2.amazonaws.com'
+						sh "aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 225742832627.dkr.ecr.us-east-2.amazonaws.com"
 						echo '>>> Docker image push'
-						echo 'docker push 225742832627.dkr.ecr.us-east-2.amazonaws.com/app-test:${short_commit_id}.B${BUILD_NUMBER}'
+						sh "docker push 225742832627.dkr.ecr.us-east-2.amazonaws.com/app-test:${short_commit_id}.B${BUILD_NUMBER}"
 						
 					}
 					catch (e){
