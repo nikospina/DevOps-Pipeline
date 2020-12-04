@@ -72,7 +72,7 @@ pipeline {
                 script{
                     try {
                         echo '>>> Build image'
-                        sh "docker build -t 125277160564.dkr.ecr.us-east-1.amazonaws.com/cobis/cobis-devops-liquibase-4:latest ."
+                        sh "docker build -t 125277160564.dkr.ecr.us-east-1.amazonaws.com/cobis/cobis-devops-liquibase-4:${short_commit_id}.B${BUILD_NUMBER} ."
                     }
                     catch (e) {
                         echo 'Something failed, I should sound the klaxons!'
