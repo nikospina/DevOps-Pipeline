@@ -1,4 +1,3 @@
-def short_commit_id = ""
 pipeline {
     agent {
 			node{
@@ -7,6 +6,7 @@ pipeline {
             }
 	environment {
 		VAR = 'A'
+		short_commit_id = ""
 	}
     stages{
         stage('init') {
@@ -16,8 +16,8 @@ pipeline {
                     try{
                         echo '>>> Init'
                         //git branch: 'develop', url: 'https://github.com/nikospina/DevOps-Pipeline'
-						short_commit_id = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
-						println '${short_commit_id}'
+						short_commit_id = sh (script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+						echo "git short commit id: ${short_commit_id}"
                     }
                     catch (e) {
                         echo 'Something failed, I should sound the klaxons!'
