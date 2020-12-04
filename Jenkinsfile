@@ -44,7 +44,7 @@ pipeline {
                 script{                    
                     try {
                         echo '>>> Test'
-                        //withDockerContainer("node") { sh "npm set strict-ssl false && npm install && npm test" }
+                        withDockerContainer("node") { sh "npm set strict-ssl false && npm install && npm test" }
 						
                         echo '>>> Publish Results'
 						
