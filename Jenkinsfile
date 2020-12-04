@@ -74,7 +74,7 @@ pipeline {
                         echo '>>> Build image'
                         sh "docker build -t app-test ."
 						echo '>>> Tag image'
-						sh "docker tag app-test:latest 225742832627.dkr.ecr.us-east-2.amazonaws.com/app-test:latest"
+						sh "docker tag app-test:latest 225742832627.dkr.ecr.us-east-2.amazonaws.com/app-test:${short_commit_id}.B${BUILD_NUMBER}"
                     }
                     catch (e) {
                         echo 'Something failed, I should sound the klaxons!'
@@ -109,7 +109,7 @@ pipeline {
 						sh "aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 225742832627.dkr.ecr.us-east-2.amazonaws.com"
 						echo '>>> Docker image push'
 						sh "docker images"
-						sh "docker push 225742832627.dkr.ecr.us-east-2.amazonaws.com/app-test:latest"
+						sh "docker push 225742832627.dkr.ecr.us-east-2.amazonaws.com/app-test:${short_commit_id}.B${BUILD_NUMBER}"
 						
 					}
 					catch (e){
@@ -124,12 +124,9 @@ pipeline {
 				script{
 					try {
 						echo '>>> Scan image'
-						//withDockerContainer("darkaru/aws-cli-kubectl:v4") {
-						//	echo '>>> Scan image'
-						//	sh 'aws ecr start-image-scan --registry-id 225742832627 --repository-name app-test --image-id imageTag=${short_commit_id}.B${BUILD_NUMBER} --output text | tee ecr_start_scan_${BUILD_NUMBER}.txt' 
-						//	
-						//	sh 'aws ecr describe-image-scan-findings --registry-id 225742832627 --repository-name app-test --image-id imageTag=${short_commit_id}.B${BUILD_NUMBER} --output text | tee ecr_scanResult_${BUILD_NUMBER}.txt'
-						//}				
+						sh "aws ecr start-image-scan --registry-id 225742832627 --repository-name app-test --image-id imageTag=${short_commit_id}.B${BUILD_NUMBER} --output text | tee ecr_start_scan_${BUILD_NUMBER}.txt"
+						
+						sh "aws ecr describe-image-scan-findings --registry-id 225742832627 --repository-name app-test --image-id imageTag=${short_commit_id}.B${BUILD_NUMBER} --output text | tee ecr_scanResult_${BUILD_NUMBER}.txt"			
 					}
 					catch (e){
 						echo 'Something failed, I should sound the klaxons!'
