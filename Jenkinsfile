@@ -70,7 +70,7 @@ pipeline {
                 script{
                     try {
                         echo '>>> Build image'
-                        //sh "docker build -t darkaru/npm-test-example:v1 ."
+                        sh "docker build -t 225742832627.dkr.ecr.us-east-2.amazonaws.com/app-test:latest"
                     }
                     catch (e) {
                         echo 'Something failed, I should sound the klaxons!'
@@ -105,6 +105,7 @@ pipeline {
 							echo '>>> Docker login'
 							sh 'aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 225742832627.dkr.ecr.us-east-2.amazonaws.com'
 							echo '>>> Docker image push'
+							sh 'docker push 225742832627.dkr.ecr.us-east-2.amazonaws.com/app-test:latest'
 						}
 					}
 					catch (e){
