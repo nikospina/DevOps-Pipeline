@@ -101,10 +101,8 @@ pipeline {
 			steps{
 				script{
 					try {
-						withDockerContainer("darkaru/docker-aws-cli:v2") { 
 							echo '>>> Docker login'
 							sh 'aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 225742832627.dkr.ecr.us-east-2.amazonaws.com'
-						}
 							echo '>>> Docker image push'
 							sh 'docker push 225742832627.dkr.ecr.us-east-2.amazonaws.com/app-test:latest'
 						
