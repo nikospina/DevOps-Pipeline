@@ -70,7 +70,7 @@ pipeline {
                 script{
                     try {
                         echo '>>> Build image'
-                        sh "docker build -t 225742832627.dkr.ecr.us-east-2.amazonaws.com/app-test:latest"
+                        sh "docker build -t 225742832627.dkr.ecr.us-east-2.amazonaws.com/app-test:latest ."
                     }
                     catch (e) {
                         echo 'Something failed, I should sound the klaxons!'
