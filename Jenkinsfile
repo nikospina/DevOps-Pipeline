@@ -104,9 +104,9 @@ pipeline {
 				script{
 					try {
 							echo '>>> Docker login'
-							//sh 'aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 225742832627.dkr.ecr.us-east-2.amazonaws.com'
+							sh 'aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 225742832627.dkr.ecr.us-east-2.amazonaws.com'
 							echo '>>> Docker image push'
-							//sh 'docker push 225742832627.dkr.ecr.us-east-2.amazonaws.com/app-test:${short_commit_id}.B${BUILD_NUMBER}'
+							sh 'docker push 225742832627.dkr.ecr.us-east-2.amazonaws.com/app-test:${short_commit_id}.B${BUILD_NUMBER}'
 						
 					}
 					catch (e){
@@ -123,9 +123,9 @@ pipeline {
 						echo '>>> Scan image'
 						withDockerContainer("darkaru/aws-cli-kubectl:v4") {
 							echo '>>> Scan image'
-							//sh 'aws ecr start-image-scan --registry-id 125277160564 --repository-name cobis/cwc-cloud --image-id imageTag=java8_tomcat9_v1.0.0_CWC3.3.0.BETA_DSG7.2.0.2019-BETA_PUX2.0.2_WBC3.2.0 --output json | tee ecr_start_scan_${BUILD_NUMBER}.txt' 
+							sh 'aws ecr start-image-scan --registry-id 225742832627 --repository-name app-test --image-id imageTag=${short_commit_id}.B${BUILD_NUMBER} --output text | tee ecr_start_scan_${BUILD_NUMBER}.txt' 
 							
-							//sh 'aws ecr describe-image-scan-findings --registry-id 125277160564 --repository-name cobis/cwc-cloud --image-id imageTag=java8_tomcat9_v1.0.0_CWC3.3.0.BETA_DSG7.2.0.2019-BETA_PUX2.0.2_WBC3.2.0 --output json | tee ecr_scanResult_${BUILD_NUMBER}.txt'
+							sh 'aws ecr describe-image-scan-findings --registry-id 225742832627 --repository-name app-test --image-id imageTag=${short_commit_id}.B${BUILD_NUMBER} --output text | tee ecr_scanResult_${BUILD_NUMBER}.txt'
 						}				
 					}
 					catch (e){
