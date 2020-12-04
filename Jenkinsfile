@@ -103,6 +103,7 @@ pipeline {
 			steps{
 				script{
 					try {
+							short_commit_id = sh (script: 'git rev-parse --short HEAD', returnStdout: true).trim()
 							echo '>>> Docker login'
 							sh 'aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 225742832627.dkr.ecr.us-east-2.amazonaws.com'
 							echo '>>> Docker image push'
