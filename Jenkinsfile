@@ -17,7 +17,7 @@ pipeline {
                         echo '>>> Init'
                         //git branch: 'develop', url: 'https://github.com/nikospina/DevOps-Pipeline'
 						short_commit_id = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
-						echo ${short_commit_id}
+						println '${short_commit_id}'
                     }
                     catch (e) {
                         echo 'Something failed, I should sound the klaxons!'
