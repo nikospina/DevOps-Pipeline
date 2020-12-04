@@ -1,4 +1,4 @@
-def BRANCH = ""
+def short_commit_id = ""
 pipeline {
     agent {
 			node{
@@ -9,13 +9,15 @@ pipeline {
 		VAR = 'A'
 	}
     stages{
-        stage('Checkout') {
+        stage('init') {
 			agent any
             steps{
                 script{
                     try{
-                        echo 'checkout repo'
+                        echo '>>> Init'
                         //git branch: 'develop', url: 'https://github.com/nikospina/DevOps-Pipeline'
+						short_commit_id = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
+						echo ${short_commit_id}
                     }
                     catch (e) {
                         echo 'Something failed, I should sound the klaxons!'
@@ -103,10 +105,8 @@ pipeline {
 					try {
 							echo '>>> Docker login'
 							//sh 'aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 225742832627.dkr.ecr.us-east-2.amazonaws.com'
-							sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 125277160564.dkr.ecr.us-east-1.amazonaws.com'
 							echo '>>> Docker image push'
 							//sh 'docker push 225742832627.dkr.ecr.us-east-2.amazonaws.com/app-test:latest'
-							sh 'docker push 125277160564.dkr.ecr.us-east-1.amazonaws.com/cobis/cobis-devops-liquibase-4:latest'
 						
 					}
 					catch (e){
