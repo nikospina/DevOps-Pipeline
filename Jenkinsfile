@@ -44,21 +44,21 @@ pipeline {
                 script{                    
                     try {
                         echo '>>> Test'
-                        //withDockerContainer("node") { sh "npm set strict-ssl false && npm install && npm test" }
+                        withDockerContainer("node") { sh "npm set strict-ssl false && npm install && npm test" }
 						
                         echo '>>> Publish Results'
 						
-                        //cobertura autoUpdateHealth: false, autoUpdateStability: false, coberturaReportFile: 'coverage/*coverage.xml', conditionalCoverageTargets: '70, 0, 0', failUnhealthy: false, failUnstable: false, lineCoverageTargets: '80, 0, 0', maxNumberOfBuilds: 0, methodCoverageTargets: '80, 0, 0', onlyStable: false, sourceEncoding: 'ASCII'
-                        //junit skipPublishingChecks: false, testResults: 'test-results.xml'
+                        cobertura autoUpdateHealth: false, autoUpdateStability: false, coberturaReportFile: 'coverage/*coverage.xml', conditionalCoverageTargets: '70, 0, 0', failUnhealthy: false, failUnstable: false, lineCoverageTargets: '80, 0, 0', maxNumberOfBuilds: 0, methodCoverageTargets: '80, 0, 0', onlyStable: false, sourceEncoding: 'ASCII'
+                        junit skipPublishingChecks: false, testResults: 'test-results.xml'
 						
 						echo '>>> Publish Results in TFS'
 						
-						//step([$class: 'TeamCollectResultsPostBuildAction', 
-						//	requestedResults: [
-						//		[includes: 'test-results.xml', teamResultType: 'JUNIT'],
-						//		[includes: 'coverage/*coverage.xml', teamResultType: 'COBERTURA']
-						//	]
-						//])
+						step([$class: 'TeamCollectResultsPostBuildAction', 
+							requestedResults: [
+								[includes: 'test-results.xml', teamResultType: 'JUNIT'],
+								[includes: 'coverage/*coverage.xml', teamResultType: 'COBERTURA']
+							]
+						])
                     }
                     catch (e) {
                         echo 'Something failed, I should sound the klaxons!'
