@@ -5,7 +5,7 @@ pipeline {
 				}
             }
 	environment {
-		VAR = 'A'
+		AWS_DEFAULT_REGION = "us-east-2"
 		short_commit_id = ""
 	}
     stages{
