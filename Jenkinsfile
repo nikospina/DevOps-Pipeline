@@ -44,21 +44,21 @@ pipeline {
                 script{                    
                     try {
                         echo '>>> Test'
-                        withDockerContainer("node") { sh "npm set strict-ssl false && npm install && npm test" }
+                        //withDockerContainer("node") { sh "npm set strict-ssl false && npm install && npm test" }
 						
                         echo '>>> Publish Results'
 						
-                        cobertura autoUpdateHealth: false, autoUpdateStability: false, coberturaReportFile: 'coverage/*coverage.xml', conditionalCoverageTargets: '70, 0, 0', failUnhealthy: false, failUnstable: false, lineCoverageTargets: '80, 0, 0', maxNumberOfBuilds: 0, methodCoverageTargets: '80, 0, 0', onlyStable: false, sourceEncoding: 'ASCII'
-                        junit skipPublishingChecks: false, testResults: 'test-results.xml'
-						
-						echo '>>> Publish Results in TFS'
-						
-						step([$class: 'TeamCollectResultsPostBuildAction', 
-							requestedResults: [
-								[includes: 'test-results.xml', teamResultType: 'JUNIT'],
-								[includes: 'coverage/*coverage.xml', teamResultType: 'COBERTURA']
-							]
-						])
+                        //cobertura autoUpdateHealth: false, autoUpdateStability: false, coberturaReportFile: 'coverage/*coverage.xml', conditionalCoverageTargets: '70, 0, 0', failUnhealthy: false, failUnstable: false, lineCoverageTargets: '80, 0, 0', maxNumberOfBuilds: 0, methodCoverageTargets: '80, 0, 0', onlyStable: false, sourceEncoding: 'ASCII'
+                        //junit skipPublishingChecks: false, testResults: 'test-results.xml'
+						//
+						//echo '>>> Publish Results in TFS'
+						//
+						//step([$class: 'TeamCollectResultsPostBuildAction', 
+						//	requestedResults: [
+						//		[includes: 'test-results.xml', teamResultType: 'JUNIT'],
+						//		[includes: 'coverage/*coverage.xml', teamResultType: 'COBERTURA']
+						//	]
+						//])
                     }
                     catch (e) {
                         echo 'Something failed, I should sound the klaxons!'
@@ -72,7 +72,9 @@ pipeline {
                 script{
                     try {
                         echo '>>> Build image'
-                        sh "docker build -t 225742832627.dkr.ecr.us-east-2.amazonaws.com/app-test:${short_commit_id}.B${BUILD_NUMBER} ."
+                        sh "docker build -t app-test ."
+						echo '>>> Tag image'
+						sh "docker tag app-test:latest 225742832627.dkr.ecr.us-east-2.amazonaws.com/app-test:latest"
                     }
                     catch (e) {
                         echo 'Something failed, I should sound the klaxons!'
@@ -107,7 +109,7 @@ pipeline {
 						sh "aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 225742832627.dkr.ecr.us-east-2.amazonaws.com"
 						echo '>>> Docker image push'
 						sh "docker images"
-						//sh "docker push 225742832627.dkr.ecr.us-east-2.amazonaws.com/app-test:${short_commit_id}.B${BUILD_NUMBER}"
+						sh "docker push 225742832627.dkr.ecr.us-east-2.amazonaws.com/app-test:latest"
 						
 					}
 					catch (e){
