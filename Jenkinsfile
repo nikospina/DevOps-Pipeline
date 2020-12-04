@@ -42,21 +42,21 @@ pipeline {
                 script{                    
                     try {
                         echo '>>> Test'
-                        withDockerContainer("node") { sh "npm set strict-ssl false && npm install && npm test" }
+                        //withDockerContainer("node") { sh "npm set strict-ssl false && npm install && npm test" }
 						
                         echo '>>> Publish Results'
 						
-                        cobertura autoUpdateHealth: false, autoUpdateStability: false, coberturaReportFile: 'coverage/*coverage.xml', conditionalCoverageTargets: '70, 0, 0', failUnhealthy: false, failUnstable: false, lineCoverageTargets: '80, 0, 0', maxNumberOfBuilds: 0, methodCoverageTargets: '80, 0, 0', onlyStable: false, sourceEncoding: 'ASCII'
-                        junit skipPublishingChecks: false, testResults: 'test-results.xml'
+                        //cobertura autoUpdateHealth: false, autoUpdateStability: false, coberturaReportFile: 'coverage/*coverage.xml', conditionalCoverageTargets: '70, 0, 0', failUnhealthy: false, failUnstable: false, lineCoverageTargets: '80, 0, 0', maxNumberOfBuilds: 0, methodCoverageTargets: '80, 0, 0', onlyStable: false, sourceEncoding: 'ASCII'
+                        //junit skipPublishingChecks: false, testResults: 'test-results.xml'
 						
 						echo '>>> Publish Results in TFS'
 						
-						step([$class: 'TeamCollectResultsPostBuildAction', 
-							requestedResults: [
-								[includes: 'test-results.xml', teamResultType: 'JUNIT'],
-								[includes: 'coverage/*coverage.xml', teamResultType: 'COBERTURA']
-							]
-						])
+						//step([$class: 'TeamCollectResultsPostBuildAction', 
+						//	requestedResults: [
+						//		[includes: 'test-results.xml', teamResultType: 'JUNIT'],
+						//		[includes: 'coverage/*coverage.xml', teamResultType: 'COBERTURA']
+						//	]
+						//])
                     }
                     catch (e) {
                         echo 'Something failed, I should sound the klaxons!'
@@ -70,8 +70,7 @@ pipeline {
                 script{
                     try {
                         echo '>>> Build image'
-                        //withDockerContainer("docker") { }
-                        sh "docker build -t darkaru/npm-test-example:v1 ."
+                        //sh "docker build -t darkaru/npm-test-example:v1 ."
                     }
                     catch (e) {
                         echo 'Something failed, I should sound the klaxons!'
@@ -87,9 +86,9 @@ pipeline {
                         echo '>>> Scan image'
                         //withDockerContainer("darkaru/trivy:v1") { sh "trivy darkaru/npm-test-example:v1" }
 						echo '>>> Scan for critical vulnerabilities'
-						sh "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $HOME/Library/Caches:/root/.cache/ aquasec/trivy --exit-code 0 --severity CRITICAL darkaru/npm-test-example:v1"
+						//sh "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $HOME/Library/Caches:/root/.cache/ aquasec/trivy --exit-code 0 --severity CRITICAL darkaru/npm-test-example:v1"
 						echo '>>> Scan for medium and high vulnerabilities'
-						sh "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $HOME/Library/Caches:/root/.cache/ aquasec/trivy --exit-code 0 --severity MEDIUM,HIGH darkaru/npm-test-example:v1"
+						//sh "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $HOME/Library/Caches:/root/.cache/ aquasec/trivy --exit-code 0 --severity MEDIUM,HIGH darkaru/npm-test-example:v1"
                     }
                     catch (e) {
                         echo 'Something failed, I should sound the klaxons!'
@@ -102,7 +101,11 @@ pipeline {
 			steps{
 				script{
 					try {
-						echo '>>> Docker image push'
+						withDockerContainer("amazon/aws-cli") { 
+							echo '>>> Docker login'
+							sh 'aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 225742832627.dkr.ecr.us-east-2.amazonaws.com'
+							echo '>>> Docker image push'
+						}
 					}
 					catch (e){
 						echo 'Something failed, I should sound the klaxons!'
@@ -117,10 +120,10 @@ pipeline {
 					try {
 						echo '>>> Scan image'
 						withDockerContainer("darkaru/aws-cli-kubectl:v4") {
+							echo '>>> Scan image'
+							//sh 'aws ecr start-image-scan --registry-id 125277160564 --repository-name cobis/cwc-cloud --image-id imageTag=java8_tomcat9_v1.0.0_CWC3.3.0.BETA_DSG7.2.0.2019-BETA_PUX2.0.2_WBC3.2.0 --output json | tee ecr_start_scan_${BUILD_NUMBER}.txt' 
 							
-							sh 'aws ecr start-image-scan --registry-id 125277160564 --repository-name cobis/cwc-cloud --image-id imageTag=java8_tomcat9_v1.0.0_CWC3.3.0.BETA_DSG7.2.0.2019-BETA_PUX2.0.2_WBC3.2.0 --output json | tee ecr_start_scan_${BUILD_NUMBER}.txt' 
-							
-							sh 'aws ecr describe-image-scan-findings --registry-id 125277160564 --repository-name cobis/cwc-cloud --image-id imageTag=java8_tomcat9_v1.0.0_CWC3.3.0.BETA_DSG7.2.0.2019-BETA_PUX2.0.2_WBC3.2.0 --output json | tee ecr_scanResult_${BUILD_NUMBER}.txt'
+							//sh 'aws ecr describe-image-scan-findings --registry-id 125277160564 --repository-name cobis/cwc-cloud --image-id imageTag=java8_tomcat9_v1.0.0_CWC3.3.0.BETA_DSG7.2.0.2019-BETA_PUX2.0.2_WBC3.2.0 --output json | tee ecr_scanResult_${BUILD_NUMBER}.txt'
 						}				
 					}
 					catch (e){
