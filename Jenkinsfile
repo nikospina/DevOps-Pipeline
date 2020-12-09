@@ -124,13 +124,13 @@ pipeline {
 				script{
 					try {
 						echo '>>> Scan image'
-						sh "aws ecr start-image-scan --registry-id 225742832627 --repository-name app-test --image-id imageTag=${short_commit_id}.B${BUILD_NUMBER} --output text | tee ecr_start_scan_${BUILD_NUMBER}.txt"
+						sh "aws ecr start-image-scan --registry-id 225742832627 --repository-name app-test --image-id imageTag=${short_commit_id}.B${BUILD_NUMBER} --output text" //| tee ecr_start_scan_${BUILD_NUMBER}.txt"
 						
-						sh "cat ecr_start_scan_${BUILD_NUMBER}.txt"
+						//sh "cat ecr_start_scan_${BUILD_NUMBER}.txt"
 						
-						sh "aws ecr describe-image-scan-findings --registry-id 225742832627 --repository-name app-test --image-id imageTag=${short_commit_id}.B${BUILD_NUMBER} --output text | tee ecr_scanResult_${BUILD_NUMBER}.txt"
+						sh "aws ecr describe-image-scan-findings --registry-id 225742832627 --repository-name app-test --image-id imageTag=${short_commit_id}.B${BUILD_NUMBER} --output text" //| tee ecr_scanResult_${BUILD_NUMBER}.txt"
 
-						sh "cat ecr_scanResult_${BUILD_NUMBER}.txt"
+						//sh "cat ecr_scanResult_${BUILD_NUMBER}.txt"
 					}
 					catch (e){
 						echo 'Something failed, I should sound the klaxons!'
