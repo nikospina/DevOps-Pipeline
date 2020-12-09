@@ -1,3 +1,3 @@
 FROM alpine
-RUN apk add curl jq
+RUN apk add curl jq zip
 RUN ls -la
