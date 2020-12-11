@@ -15,6 +15,7 @@ pipeline {
                 script{
                     try{
                         echo '>>> Init'
+			sh "sam"
                         //git branch: 'develop', url: 'https://github.com/nikospina/DevOps-Pipeline'
 						short_commit_id = sh (script: 'git rev-parse --short HEAD', returnStdout: true).trim()
 						echo "git short commit id: ${short_commit_id}"
