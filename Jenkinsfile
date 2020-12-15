@@ -89,7 +89,7 @@ pipeline {
                 script{
                     try {
                         echo '>>> Scan image'
-                        withDockerContainer("darkaru/trivy:v1") { sh "trivy darkaru/npm-test-example:v1" }
+                        //withDockerContainer("darkaru/trivy:v1") { sh "trivy darkaru/npm-test-example:v1" }
 						echo '>>> Scan for critical vulnerabilities'
 						sh "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $HOME/Library/Caches:/root/.cache/ aquasec/trivy --exit-code 0 --severity CRITICAL 225742832627.dkr.ecr.us-east-2.amazonaws.com/app-test:${short_commit_id}.B${BUILD_NUMBER}"
 						echo '>>> Scan for medium and high vulnerabilities'
