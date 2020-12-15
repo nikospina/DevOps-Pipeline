@@ -5,6 +5,7 @@ pipeline {
 				}
             }
 	environment {
+		XDG_CACHE_HOME = '/tmp/.cache'
 		AWS_DEFAULT_REGION = "us-east-2"
 		short_commit_id = ""
 	}
