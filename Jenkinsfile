@@ -44,21 +44,21 @@ pipeline {
                 script{                    
                     try {
                         echo '>>> Test'
-                        //withDockerContainer("node") { sh "npm set strict-ssl false && npm install && npm test" }
+                        withDockerContainer("node") { sh "npm set strict-ssl false && npm install && npm test" }
 						
                         echo '>>> Publish Results'
 						
-                        //cobertura autoUpdateHealth: false, autoUpdateStability: false, coberturaReportFile: 'coverage/*coverage.xml', conditionalCoverageTargets: '70, 0, 0', failUnhealthy: false, failUnstable: false, lineCoverageTargets: '80, 0, 0', maxNumberOfBuilds: 0, methodCoverageTargets: '80, 0, 0', onlyStable: false, sourceEncoding: 'ASCII'
-                        //junit skipPublishingChecks: false, testResults: 'test-results.xml'
-						//
-						//echo '>>> Publish Results in TFS'
-						//
-						//step([$class: 'TeamCollectResultsPostBuildAction', 
-						//	requestedResults: [
-						//		[includes: 'test-results.xml', teamResultType: 'JUNIT'],
-						//		[includes: 'coverage/*coverage.xml', teamResultType: 'COBERTURA']
-						//	]
-						//])
+                        cobertura autoUpdateHealth: false, autoUpdateStability: false, coberturaReportFile: 'coverage/*coverage.xml', conditionalCoverageTargets: '70, 0, 0', failUnhealthy: false, failUnstable: false, lineCoverageTargets: '80, 0, 0', maxNumberOfBuilds: 0, methodCoverageTargets: '80, 0, 0', onlyStable: false, sourceEncoding: 'ASCII'
+                        junit skipPublishingChecks: false, testResults: 'test-results.xml'
+						
+						echo '>>> Publish Results in TFS'
+						
+						step([$class: 'TeamCollectResultsPostBuildAction', 
+							requestedResults: [
+								[includes: 'test-results.xml', teamResultType: 'JUNIT'],
+								[includes: 'coverage/*coverage.xml', teamResultType: 'COBERTURA']
+							]
+						])
                     }
                     catch (e) {
                         echo 'Something failed, I should sound the klaxons!'
@@ -88,11 +88,11 @@ pipeline {
                 script{
                     try {
                         echo '>>> Scan image'
-                        //withDockerContainer("darkaru/trivy:v1") { sh "trivy darkaru/npm-test-example:v1" }
+                        withDockerContainer("darkaru/trivy:v1") { sh "trivy darkaru/npm-test-example:v1" }
 						echo '>>> Scan for critical vulnerabilities'
-						//sh "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $HOME/Library/Caches:/root/.cache/ aquasec/trivy --exit-code 0 --severity CRITICAL 225742832627.dkr.ecr.us-east-2.amazonaws.com/app-test:${short_commit_id}.B${BUILD_NUMBER}"
+						sh "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $HOME/Library/Caches:/root/.cache/ aquasec/trivy --exit-code 0 --severity CRITICAL 225742832627.dkr.ecr.us-east-2.amazonaws.com/app-test:${short_commit_id}.B${BUILD_NUMBER}"
 						echo '>>> Scan for medium and high vulnerabilities'
-						//sh "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $HOME/Library/Caches:/root/.cache/ aquasec/trivy --exit-code 0 --severity MEDIUM,HIGH 225742832627.dkr.ecr.us-east-2.amazonaws.com/app-test:${short_commit_id}.B${BUILD_NUMBER}"
+						sh "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $HOME/Library/Caches:/root/.cache/ aquasec/trivy --exit-code 0 --severity MEDIUM,HIGH 225742832627.dkr.ecr.us-east-2.amazonaws.com/app-test:${short_commit_id}.B${BUILD_NUMBER}"
                     }
                     catch (e) {
                         echo 'Something failed, I should sound the klaxons!'
@@ -134,7 +134,7 @@ pipeline {
 					}
 					catch (e){
 						echo 'Something failed, I should sound the klaxons!'
-                        throw e
+                        //throw e
 					}
 				}
 			}
